@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>File Upload</title>
+</head>
+<body>
+    <h1>File Upload</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label for="file">Select a file:</label>
+        <input type="file" name="file" id="file">
+        <br><br>
+        <input type="submit" value="Upload">
+    </form>
+    <script>
+        // handle form submission
+        const form = document.getElementById("uploadForm");
+        form.addEventListener("submit", function(e) {
+            e.preventDefault(); // prevent default form submission
+
+            // create a new FormData object to store the file data
+            const formData = new FormData(form);
+
+            // send a POST request to the server using the fetch API
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Error uploading file');
+                }
+            })
+            .then(data => {
+                // handle the JSON response
+                alert(data.message);
+                })
+                .catch(error => {
+                console.error(error);
+            });
+
+        });
+    </script>
+</body>
+</html>
