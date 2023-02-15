@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -8,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -89,8 +91,18 @@ func UploadFile(c *gin.Context) error {
 		return err
 	}
 
+	err = godotenv.Load(".env")
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	host := os.Getenv("UPLOAD_HOST")
+	url := fmt.Sprintf("%suploaded/%s", host, newName)
+	fmt.Println(host, url)
+
 	c.JSON(http.StatusOK, gin.H{
 		"filename": newName,
+		"url":      url,
 		"message":  "sukses menambahkan file",
 	})
 
